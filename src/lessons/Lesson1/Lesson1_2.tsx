@@ -5,16 +5,16 @@ function Cell({
   value,
   row,
   col,
+  changeData,
 }: {
   value: string
   row: number
   col: number
+  changeData: (value: string) => void
 }) {
   const [editValue, setEditValue] = useState(value)
   const [isEdit, setIsEdit] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
-  const { changeTargetCell } = useCellsData()
-  const changeData = changeTargetCell(row, col)
 
   const cellClick = () => {
     setIsEdit(true)
@@ -48,7 +48,7 @@ function Cell({
           <button onClick={enter}>確定</button>
         </>
       ) : (
-        <div onClick={cellClick}>{value}</div>
+        <div onClick={cellClick}>{editValue}</div>
       )}
     </td>
   )
@@ -61,24 +61,26 @@ function WorkSheet({ searchKeyword }: { searchKeyword: string }) {
   //   ['3-1', '3-2', '3-3'],
   // ])
 
-  const { cells } = useCellsData()
+  const { cells, changeTargetCell } = useCellsData()
+
   const { count, add, sub } = useCounter()
 
   const filteredRows = searchKeyword
     ? cells.filter((row) => row.some((cell) => cell.includes(searchKeyword)))
     : cells
 
-  console.log(cells)
-  console.log(count)
-
   return (
     <>
       <table>
         <tbody>
           {filteredRows.map((row, i) => (
-            <tr>
+            <tr key={i}>
               {row.map((cell, j) => (
-                <Cell value={cell} row={i} col={j} />
+                <Cell
+                  key={`${i}-${j}`}
+                  value={cell}
+                  changeData={changeTargetCell(i, j)}
+                />
               ))}
             </tr>
           ))}
@@ -86,8 +88,20 @@ function WorkSheet({ searchKeyword }: { searchKeyword: string }) {
       </table>
       <hr />
       <p>counter: {count}</p>
-      <button onClick={add}>add</button>
-      <button onClick={sub}>sub</button>
+      <button style={{ display: 'block' }} onClick={add}>
+        add
+      </button>
+
+      <button style={{ display: 'block' }} onClick={sub}>
+        sub
+      </button>
+
+      <button
+        style={{ display: 'block' }}
+        onClick={() => changeTargetCell(1, 1)('update')}
+      >
+        update
+      </button>
     </>
   )
 }

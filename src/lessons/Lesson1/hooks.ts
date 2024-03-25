@@ -20,6 +20,7 @@ export const useCellsData = () => {
     ['2-1', '2-2', '2-3'],
     ['3-1', '3-2', '3-3'],
   ])
+  console.log(`useCellsData=${cells}`)
 
   const changeTargetCell = (row: number, col: number) => (value: string) => {
     const newCells = cells.map((rowCells, rowIndex) =>

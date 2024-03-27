@@ -1,58 +1,25 @@
-import { useEffect, useState } from "react";
+import useSWR from 'swr'
+import { useFetchUser } from './hooks/useFetchUser'
+import { cache } from 'swr/_internal'
 
-interface User {
-  id: number;
-  name: string;
-  username: string;
-  email: string;
-  address: {
-    city: string;
-  };
-}
+const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
 const Lesson2_3 = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  // const { user, loading } = useFetchUser()
+  const {
+    data: user,
+    isLoading: loading,
+    error,
+  } = useSWR('https://jsonplaceholder.typicode.com/users/1', fetcher)
 
-  useEffect(() => {
-    let isMounted = true; // このフラグはコンポーネントのマウント状態を追跡します
-
-    const fetchUser = async () => {
-      try {
-        const response = await fetch(
-          "https://jsonplaceholder.typicode.com/users/1"
-        );
-        if (!response.ok) {
-          throw new Error("データの取得に失敗しました");
-        }
-        const userData: User = await response.json();
-
-        if (isMounted) {
-          setUser(userData);
-          setLoading(false);
-        }
-      } catch (error) {
-        if (isMounted) {
-          console.error(error);
-          setLoading(false);
-        }
-      }
-    };
-
-    fetchUser();
-
-    // クリーンアップ関数
-    return () => {
-      isMounted = false; // コンポーネントがアンマウントされたらフラグをfalseに設定
-    };
-  }, []); // 空の依存配列
+  console.log(cache)
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
   if (!user) {
-    return <div>ユーザー情報が見つかりません。</div>;
+    return <div>ユーザー情報が見つかりません。</div>
   }
 
   return (
@@ -71,7 +38,7 @@ const Lesson2_3 = () => {
         <strong>都市:</strong> {user.address.city}
       </p>
     </div>
-  );
-};
+  )
+}
 
-export default Lesson2_3;
+export default Lesson2_3

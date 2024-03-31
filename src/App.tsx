@@ -1,5 +1,5 @@
 import './App.css'
-import Lesson5_3 from './lessons/Lesson5/Lesson5_3/Lesson5_3'
+import Lesson6_1 from './lessons/Lesson6/Lesson6_1/Lesson6_1'
 // import Lesson1_1 from "./lessons/Lesson1/Lesson1_1";
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
       {/* <Lesson1_1 /> */}
       {/* <Lesson1_2 /> */}
       {/* <Lesson2_3 /> */}
-      <Lesson5_3 />
+      <Lesson6_1 />
       {/* ... */}
     </div>
   )
